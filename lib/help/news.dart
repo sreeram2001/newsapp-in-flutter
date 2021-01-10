@@ -1,7 +1,6 @@
-import 'dart:convert';
-
 import 'package:trending_newsapp/models/articlemodel.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class News{
 
@@ -9,7 +8,7 @@ class News{
 
   Future<void> getNews() async{
 
-    String url = "http://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=9208cb71f9394257a48a1c5b416b0ae5";
+    String url = "http://newsapi.org/v2/top-headlines?country=in&category=business&apiKey=9208cb71f9394257a48a1c5b416b0ae5";
 
     var response = await http.get(url);
     var jsonData = jsonDecode(response.body);

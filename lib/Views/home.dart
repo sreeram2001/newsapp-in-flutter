@@ -3,6 +3,8 @@ import 'package:trending_newsapp/models/categorymodel.dart';
 import 'package:trending_newsapp/help/data.dart';
 import 'package:trending_newsapp/models/articlemodel.dart';
 import 'package:trending_newsapp/help/news.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:trending_newsapp/Views/article.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -38,6 +40,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
 
@@ -50,63 +53,57 @@ class _HomeState extends State<Home> {
                 color: Colors.amber,
               ),),
             ),
-            Container(
-              padding: EdgeInsets.fromLTRB(150.0, 5.0, 5.0, 5.0),
-              child: Icon(
-                Icons.search,
-                color: Colors.black,
-              ),
-            ),
+
           ],
         ),
         elevation: 0.0,
       ),
-      body: loading? Center(
+      body: loading ? Center(
         child: Container(
-
-            child: CircularProgressIndicator(),
+          child: CircularProgressIndicator(),
         ),
-      ): SingleChildScrollView(
+      ) : SingleChildScrollView(
         child: Container(
-          child: Container(
-            child: Column(
-              children: [
-
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-
-                  height: 80,
-                  child: ListView.builder(
-                      itemCount: categories.length,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index){
-                        return Categorycard(
-                          imageUrl: categories[index].imageUrl,
-                          categoryName : categories[index].categoryName,
-                        );
-                      }),
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            children: [
+               ///Category
+              Container(
+                height: 80,
+                child: ListView.builder(
+                  itemCount: categories.length,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context,index){
+                    return Categorycard(
+                      imageUrl: categories[index].imageUrl,
+                      categoryName : categories[index].categoryName,
+                    );
+                    }),
               ),
 
+              ///Blog
+
               Container(
-                 child: ListView.builder(
-                   itemCount: articles.length,
-                     shrinkWrap: true,
-                     itemBuilder: (context, index){
-                     return Blogcard(
-                       imageUrl: articles[index].urlToImage,
-                       title:  articles[index].title,
-                       desp: articles[index].description,
-
-                     );
-    }),
-        )
-
+                padding: EdgeInsets.only(top: 14),
+                child: ListView.builder(
+                  itemCount: articles.length,
+                    shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
+                    itemBuilder: (context, index){
+                    return Blogcard(
+                      imageUrl: articles[index].urlToImage,
+                      title:  articles[index].title,
+                      desp: articles[index].description,
+                      url: articles[index].url,
+                    );
+                    }),
+              )
             ],
           ),
         ),
-    ),
-      ));
+      ),
+    );
   }
 }
 
@@ -118,29 +115,32 @@ class Categorycard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(right: 16),
-      child: Stack(
-        children: [
-          ClipRRect(borderRadius: BorderRadius.circular(6),
-              child: Image.network(imageUrl, width: 120,height: 60,fit: BoxFit.cover,)),
-          Container(
-            alignment: Alignment.center,
-            width: 120,height: 60,
-            decoration: BoxDecoration(
+    return GestureDetector(
+      onTap: (){
+
+      },
+      child: Container(
+        margin: EdgeInsets.only(right: 16),
+        child: Stack(
+          children: [
+            ClipRRect(borderRadius: BorderRadius.circular(6),
+                child: CachedNetworkImage(
+                  imageUrl: imageUrl, width: 120,height: 70,fit: BoxFit.cover,)),
+            Container(
+              alignment: Alignment.center,
+              width: 120,height: 70,
+              decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(6),
                 color: Colors.black26,
-
-
-            ),
-
-            child: Text(categoryName, style: TextStyle(
-              color: Colors.white,
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-            ),),
-          )
-        ],
+              ),
+              child: Text(categoryName, style: TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -149,19 +149,42 @@ class Categorycard extends StatelessWidget {
 
 class Blogcard extends StatelessWidget {
 
-  final String imageUrl, title, desp;
-  Blogcard({@required this.imageUrl, @required this.title, @required this.desp});
+  final String imageUrl, title, desp, url;
+  Blogcard({@required this.imageUrl, @required this.title, @required this.desp, @required this.url});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child:Column(
-        children: [
-          Image.network(imageUrl),
-          Text(title),
-          Text(desp)
-        ],
-      )
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(
+            builder: (context) => Article(
+              blogUrl: url,
+
+            )
+        ));
+      },
+
+      child: Container(
+        margin: EdgeInsets.only(bottom: 16),
+        child:Column(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+                child: Image.network(imageUrl),
+            ),
+            SizedBox(height: 8,),
+            Text(title, style: TextStyle(
+              fontSize: 17,
+              color: Colors.black87,
+              fontWeight: FontWeight.w500
+            ),),
+            SizedBox(height: 8,),
+            Text(desp, style: TextStyle(
+                color: Colors.black54
+            ),)
+          ],
+        )
+      ),
     );
   }
 }
