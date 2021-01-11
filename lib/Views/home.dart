@@ -5,6 +5,8 @@ import 'package:trending_newsapp/models/articlemodel.dart';
 import 'package:trending_newsapp/help/news.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:trending_newsapp/Views/article.dart';
+import 'package:trending_newsapp/Views/category.dart';
+
 
 class Home extends StatefulWidget {
   @override
@@ -117,6 +119,10 @@ class Categorycard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
+        Navigator.push(context, MaterialPageRoute(
+            builder: (context) => CategoryNews(
+              category: categoryName.toString().toLowerCase(),
+            )));
 
       },
       child: Container(
@@ -128,7 +134,7 @@ class Categorycard extends StatelessWidget {
                   imageUrl: imageUrl, width: 120,height: 70,fit: BoxFit.cover,)),
             Container(
               alignment: Alignment.center,
-              width: 120,height: 70,
+              width: 120,height: 80,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(6),
                 color: Colors.black26,
@@ -188,3 +194,7 @@ class Blogcard extends StatelessWidget {
     );
   }
 }
+
+
+
+

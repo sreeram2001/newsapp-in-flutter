@@ -28,6 +28,7 @@ class _ArticleState extends State<Article> {
 
                 child: Text('Trending', style: TextStyle(
                     color: Colors.black
+
                 ),),
               ),
               Container(
